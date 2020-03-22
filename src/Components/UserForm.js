@@ -1,15 +1,16 @@
 import React from 'react';
 import { Form } from 'semantic-ui-react';
+import { UserConsumer } from '../Providers/UserProvider';
 
 
-export default class UserForm extends React.Component {
+class UserForm extends React.Component {
 
   state = {
-    firstName:"",
-    lastName:"",
-    email:"",
-    phone:""
-  }
+    firstName: this.props.firstName,
+    lastName: this.props.lastName,
+    email: this.props.email,
+    phone: this.props.phone,
+  };
 
   handleChange = (e, {name, value}) => {
     console.log(e)
@@ -19,12 +20,14 @@ export default class UserForm extends React.Component {
       [e.target.name]: e.target.value,
       [name]: value
     })
-  }
+  };
 
   handleSubmit = (e) => {
     e.preventDefault();
     console.log(e)
-  }
+    const user = {...this.state};
+    this.props.updateUser(user);
+  };
 
 
   render() {
@@ -64,3 +67,23 @@ export default class UserForm extends React.Component {
     )
   }
 }
+
+
+const connectedUserForm = (props) => {
+  return(
+    <UserConsumer>
+      { value => (
+        <UserForm 
+          {...props}
+          firstName={value.firstName}
+          lastName={value.lastName}
+          email={value.email}
+          phone={value.phone}
+          updateUser={value.updateUser}
+        />
+      )}
+    </UserConsumer>
+  )
+}
+
+export default connectedUserForm;
